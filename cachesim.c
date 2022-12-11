@@ -122,19 +122,19 @@ int main(int argc, char **argv)
 	int eviction_count = 0;
 
 	char act;		// L,S
-	int size;		// size read in from file
-	int TSTAMP = 0; // value for LRU
-	int empty = -1; // index of empty space
-	int H = 0;		// is there a hit
-	int E = 0;		// is there an eviction
+	int size;		// 파일로부터 읽어드린 크기
+	int TSTAMP = 0;         // LRU를 위한 값
+	int empty = -1;         // 빈 공간의 위치
+	int H = 0;		// HIT했는지 판별
+	int E = 0;		// eviction이 일어났는지 판별
 	mem_addr_t addr;//주소 저장을 위한 변수
 
 	//파일을 열고 내용을 읽는다
-	int s; // 2**s cache sets 
-	int b; // cacheline block size 2**b bytes 
-	int E; // number of cachelines per set 
-	int S; // number of sets S = 2**s 
-	int B; // cacheline block size B = 2**b 
+	int s; // 2**s set 
+	int b; // 블럭 사이즈 2**b bytes 
+	int E; // set당 line 수 
+	int S; // set의 수 S = 2**s 
+	int B; // 클럭의 크기 B = 2**b 
 
 	FILE *traceFile = fopen(trace_file, "r");
 	if (traceFile != NULL){
@@ -143,7 +143,7 @@ int main(int argc, char **argv)
 			int toEvict = 0;
 			// keeps track of what to evict
 			if (act != 'I'){
-				// calculate address tag and set index
+				// 태그를 계산하고 index를 
 				mem_addr_t addr_tag = addr >> (par.s + par.b); //addr 중 입력받은 s,b를 뺀 상위 비트가 태그
 				int tag_size = (64 - (par.s + par.b));         //태그의 크기는 64-(s+b)
 				unsigned long long temp = addr << (tag_size);  //태그의 크기만큼 addr의 상위비트를 임시변수에 저장
